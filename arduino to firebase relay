@@ -1,0 +1,57 @@
+
+#include <ESP8266WiFi.h>
+#include <WiFiClient.h>
+#include <ESP8266WiFi.h>
+#include <SoftwareSerial.h>
+#include <FirebaseArduino.h>
+#include <ArduinoJson.h>
+#include <ESP8266HTTPClient.h>
+//===========================================================
+#define FIREBASE_HOST    "*****" //change with your url firebase
+#define FIREBASE_AUTH    "****" //change with your serial code
+static const int wifiType = 0; // 0:Station  1:AP
+const char *ssid = "Kost" ; // Put your SSID here
+const char *password = "aankost123"; // Put your PASSWORD here
+//===============================================================
+
+
+void setup() {
+  pinMode(LED_BUILTIN, OUTPUT);
+  Serial.begin(9600);
+  WiFi.begin(ssid, password);
+  Serial.print("connecting");
+  while (WiFi.status() != WL_CONNECTED)
+  {
+    Serial.print(".");
+    delay(500);
+  }
+  Serial.println();
+  Serial.print("connected: ");
+  Serial.println(WiFi.localIP());
+
+  Firebase.begin(FIREBASE_HOST, FIREBASE_AUTH);
+
+  if (Firebase.failed())
+  {
+    Serial.print(Firebase.error());
+  }
+  else{
+ 
+ Serial.print("Firebase Connected\n");
+ Firebase.setString("Senura/Value","0");
+  }
+
+}
+
+int n = 0;
+void loop() {
+
+
+  for(int i = 0; i <= 100; i++)
+ { 
+    Firebase.setInt("/Senura/Value",i);
+    delay(1000);
+ }
+
+
+}
